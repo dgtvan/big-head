@@ -1,0 +1,33 @@
+{
+  "profiles": {
+    "WSL": {
+      "commandName": "WSL2",
+      "launchUrl": "http://localhost:5130",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "http://localhost:5130",
+        "DOTNET_ENVIRONMENT": "Emulator",
+        "TEAMSFX_NOTIFICATION_STORE_FILENAME": ".notification.testtoolstore.json"
+      },
+      "distributionName": ""
+    },
+    "Emulator": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Emulator",
+        "TEAMSFX_NOTIFICATION_STORE_FILENAME": ".notification.testtoolstore.json"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5130",
+      "hotReloadProfile": "aspnetcore"
+    },
+    "Development": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT ": "Development"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5130",
+      "hotReloadProfile": "aspnetcore"
+    }
+  }
+}

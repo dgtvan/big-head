@@ -1,0 +1,15 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWarn>1591</NoWarn> <!-- Error: Missing XML comment for publicly visible type or member. If you want to enable the error, you want to remove the line "dotnet_diagnostic.CS1591.severity = none" in the file ".editorconfig" -->
+    <NoWarn>CS1591</NoWarn> <!-- Missing XML comment for publicly visible type or member -->
+	<NoWarn>IDE0290</NoWarn> <!-- Use primary constructor -->
+	<NoWarn>IDE0090</NoWarn> <!-- 'new' expression can be simplified -->
+	<NoWarn>IDE00028</NoWarn> <!-- Collection initialization can be simplified -->
+	<NoWarn>IDE0300</NoWarn> <!-- Collection initialization can be simplified -->
+  </PropertyGroup>
+</Project>
