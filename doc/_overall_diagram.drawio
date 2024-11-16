@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="omJeIMPCBmoMKP9RTQOr" name="Page-1">
-        <mxGraphModel dx="2517" dy="1352" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="3477" dy="1987" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -36,31 +36,13 @@
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-20" value="" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;rounded=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=16;startSize=14;endArrow=open;endSize=14;sourcePerimeterSpacing=8;targetPerimeterSpacing=8;curved=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;sketch=1;curveFitting=1;jiggle=2;" parent="1" target="aLLUGJKtQxOMLBAeckh2-13" edge="1">
                     <mxGeometry width="140" relative="1" as="geometry">
-                        <mxPoint x="-262" y="145" as="sourcePoint"/>
+                        <mxPoint x="-550" y="152" as="sourcePoint"/>
                         <mxPoint x="-234" y="183" as="targetPoint"/>
                         <Array as="points"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-21" value="(Pass through)" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
                     <mxGeometry x="38" y="95" width="77" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-37" value="" style="group;rounded=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1" connectable="0">
-                    <mxGeometry x="-460" y="627" width="1069" height="69" as="geometry"/>
-                </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-33" value="https://learn.microsoft.com/en-us/azure/bot-service/index-bf-sdk?view=azure-bot-service-4.0" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;sketch=1;curveFitting=1;jiggle=2;" parent="aLLUGJKtQxOMLBAeckh2-37" vertex="1">
-                    <mxGeometry y="39" width="1069" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-36" value="Bot Framework" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;locked=0;connectable=1;sketch=1;curveFitting=1;jiggle=2;" parent="aLLUGJKtQxOMLBAeckh2-37" vertex="1">
-                    <mxGeometry x="93" width="169" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-38" value="" style="group;rounded=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1" connectable="0">
-                    <mxGeometry x="-382" y="755" width="1050" height="68" as="geometry"/>
-                </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-28" value="Authentication?" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="aLLUGJKtQxOMLBAeckh2-38" vertex="1">
-                    <mxGeometry x="67" width="60" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-29" value="builder.Services.AddSingleton&amp;lt;BotFrameworkAuthentication, ConfigurationBotFrameworkAuthentication&amp;gt;();" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="aLLUGJKtQxOMLBAeckh2-38" vertex="1">
-                    <mxGeometry y="38" width="1050" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-43" value="" style="group;rounded=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1" connectable="0">
                     <mxGeometry x="227" y="172" width="191" height="87" as="geometry"/>
@@ -86,29 +68,26 @@
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-45" value="Authentication" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="aLLUGJKtQxOMLBAeckh2-46" vertex="1">
                     <mxGeometry x="34" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-47" value="BotAdaptor &amp;gt; CloudAdapterBase &amp;gt; CloundAdaptor" style="text;strokeColor=none;fillColor=none;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="180" y="-161" width="677" height="30" as="geometry"/>
-                </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-48" value="" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="-940" y="66" width="160" height="66" as="geometry"/>
+                    <mxGeometry x="-1261" y="-9" width="247" height="369" as="geometry"/>
                 </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-49" value="Channel" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="-930" y="-62" width="60" height="30" as="geometry"/>
+                <mxCell id="aLLUGJKtQxOMLBAeckh2-49" value="Channel" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=40;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="-1589" y="-228" width="244" height="80" as="geometry"/>
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-50" value="MS Teams" style="text;strokeColor=none;fillColor=none;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="-940" y="26" width="150" height="30" as="geometry"/>
+                    <mxGeometry x="-1261" y="-49" width="150" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-51" value="" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="-940" y="202" width="160" height="66" as="geometry"/>
+                    <mxGeometry x="-1559" y="4" width="160" height="66" as="geometry"/>
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-52" value="Slack" style="text;strokeColor=none;fillColor=none;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="-940" y="162" width="150" height="30" as="geometry"/>
+                    <mxGeometry x="-1559" y="-36" width="150" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-53" value="" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="-940" y="335" width="160" height="66" as="geometry"/>
+                    <mxGeometry x="-1559" y="137" width="160" height="66" as="geometry"/>
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-54" value="Twiilo" style="text;strokeColor=none;fillColor=none;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="-940" y="297" width="150" height="30" as="geometry"/>
+                    <mxGeometry x="-1559" y="99" width="150" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-55" value="State" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
                     <mxGeometry x="1383" y="-62" width="60" height="30" as="geometry"/>
@@ -128,17 +107,8 @@
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-60" value="Storage" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
                     <mxGeometry x="1841" y="-49" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-63" value="" style="group;rounded=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1" connectable="0">
-                    <mxGeometry x="-370" y="952" width="1086" height="76" as="geometry"/>
-                </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-61" value="https://learn.microsoft.com/en-us/azure/bot-service/bot-builder-concept-state?view=azure-bot-service-4.0" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="aLLUGJKtQxOMLBAeckh2-63" vertex="1">
-                    <mxGeometry y="46" width="1086" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-62" value="State" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="aLLUGJKtQxOMLBAeckh2-63" vertex="1">
-                    <mxGeometry x="43" width="60" height="30" as="geometry"/>
-                </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-66" value="" style="group;rounded=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1" connectable="0">
-                    <mxGeometry x="1226" y="762" width="655" height="70" as="geometry"/>
+                    <mxGeometry x="1716" y="512" width="655" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-64" value="TurnState: storing data for a turn." style="text;strokeColor=none;fillColor=none;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="aLLUGJKtQxOMLBAeckh2-66" vertex="1">
                     <mxGeometry width="426" height="30" as="geometry"/>
@@ -161,6 +131,9 @@
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-76" value="" style="group;rounded=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1" connectable="0">
                     <mxGeometry x="669" y="433" width="473" height="121" as="geometry"/>
                 </mxCell>
+                <mxCell id="32" value="" style="edgeStyle=none;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;html=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=16;" edge="1" parent="aLLUGJKtQxOMLBAeckh2-76" source="aLLUGJKtQxOMLBAeckh2-39" target="aLLUGJKtQxOMLBAeckh2-40">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-39" value="Microsoft.Teams.AI" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="aLLUGJKtQxOMLBAeckh2-76" vertex="1">
                     <mxGeometry x="57" width="60" height="30" as="geometry"/>
                 </mxCell>
@@ -179,14 +152,63 @@
                 <mxCell id="aLLUGJKtQxOMLBAeckh2-79" value="Microsoft.Bot.Builder" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
                     <mxGeometry x="733" y="51" width="60" height="30" as="geometry"/>
                 </mxCell>
-                <mxCell id="aLLUGJKtQxOMLBAeckh2-42" value="&lt;div&gt;&lt;span style=&quot;font-size: 20px;&quot;&gt;@Microsoft&lt;br&gt;The&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 20px; background-color: initial;&quot;&gt;Microsoft.Teams.AI.&lt;/span&gt;&lt;span style=&quot;font-size: 20px; background-color: initial;&quot;&gt;Application object replaces the traditional ActivityHandler that a bot would use....&lt;br&gt;...&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 20px;&quot;&gt;Additionally, it has built-in&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 20px; background-color: initial;&quot;&gt;support for calling into the SDK's AI system...&lt;/span&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;align=left;rounded=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="912" y="491" width="525" height="184" as="geometry"/>
+                <mxCell id="aLLUGJKtQxOMLBAeckh2-42" value="&lt;div&gt;&lt;span style=&quot;font-size: 20px;&quot;&gt;@Microsoft&lt;br&gt;The&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 20px; background-color: initial;&quot;&gt;Microsoft.Teams.AI.&lt;/span&gt;&lt;span style=&quot;font-size: 20px; background-color: initial;&quot;&gt;Application object replaces the traditional ActivityHandler that a bot would use....&lt;br&gt;...&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 20px;&quot;&gt;Additionally, it has built-in&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 20px; background-color: initial;&quot;&gt;support for calling into the SDK's AI system... (Ref5)&lt;/span&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;align=left;rounded=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="892" y="519" width="525" height="184" as="geometry"/>
                 </mxCell>
                 <mxCell id="JkmGiK_cptjWQQp2U92V-1" value="" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="-938" y="480.5" width="160" height="66" as="geometry"/>
+                    <mxGeometry x="-707" y="690.5" width="160" height="66" as="geometry"/>
                 </mxCell>
                 <mxCell id="JkmGiK_cptjWQQp2U92V-2" value="Bot Framework Emulator" style="text;strokeColor=none;fillColor=none;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
-                    <mxGeometry x="-938" y="440.5" width="260" height="30" as="geometry"/>
+                    <mxGeometry x="-701" y="646" width="260" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="" style="html=1;whiteSpace=wrap;shape=isoCube2;backgroundOutline=1;isoAngle=15;rounded=1;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="-1134" y="226" width="90" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="&lt;span style=&quot;font-size: 24px;&quot;&gt;BigHead manifest.json (Ref1)&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=20;fontStyle=0" parent="1" vertex="1">
+                    <mxGeometry x="-1197" y="186" width="313" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="&lt;span style=&quot;font-size: 24px; font-weight: 700;&quot;&gt;References&lt;br&gt;&lt;/span&gt;(1) https://learn.microsoft.com/en-us/microsoftteams/platform/concepts/build-and-test/apps-package&lt;br&gt;(2)&amp;nbsp;https://www.neilwithdata.com/teams-bot-without-azure&lt;br&gt;(3)&amp;nbsp;https://azure.microsoft.com/en-us/pricing/free-services&lt;br&gt;(4) https://hilton.giesenow.com/how-bot-calls-actually-work&lt;br&gt;(5)&amp;nbsp;https://github.com/microsoft/teams-ai&lt;br&gt;&lt;br&gt;&lt;b&gt;Others&lt;/b&gt;&lt;br&gt;A good tutorialto get started.&lt;br&gt;https://learn.microsoft.com/en-us/microsoftteams/platform/sbs-teams-conversation-bot?tabs=dev&lt;br&gt;Bot framework SDK v4&lt;br&gt;&lt;span style=&quot;text-align: center;&quot;&gt;https://learn.microsoft.com/en-us/azure/bot-service/index-bf-sdk?view=azure-bot-service-4.0&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=20;labelPosition=center;verticalLabelPosition=middle;" parent="1" vertex="1">
+                    <mxGeometry x="-1555" y="984" width="1091" height="388" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="Azure" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=40;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="-753" y="-234" width="212" height="94" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="Bot Framework Service&lt;br&gt;(or Azure Bot, or AI Bot Service)" style="text;strokeColor=none;fillColor=none;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=20;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="-707" y="-72" width="353" height="58" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="rounded=1;whiteSpace=wrap;html=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="-709" y="-1" width="135" height="369" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="BotApi" style="text;strokeColor=none;fillColor=none;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=1;fontSize=40;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;sketch=1;curveFitting=1;jiggle=2;" parent="1" vertex="1">
+                    <mxGeometry x="-265" y="-237" width="212" height="94" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="" style="edgeStyle=none;orthogonalLoop=1;jettySize=auto;html=1;rounded=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=16;startSize=14;endArrow=open;endSize=14;sourcePerimeterSpacing=8;targetPerimeterSpacing=8;curved=1;sketch=1;curveFitting=1;jiggle=2;" parent="1" edge="1">
+                    <mxGeometry width="140" relative="1" as="geometry">
+                        <mxPoint x="-984" y="150" as="sourcePoint"/>
+                        <mxPoint x="-738" y="146" as="targetPoint"/>
+                        <Array as="points"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="22" value="" style="html=1;whiteSpace=wrap;shape=isoCube2;backgroundOutline=1;isoAngle=15;rounded=1;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=20;" parent="1" vertex="1">
+                    <mxGeometry x="-660" y="212" width="60" height="68" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="&lt;span style=&quot;font-size: 24px;&quot;&gt;BigHead App&lt;br&gt;&lt;/span&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;sketch=1;hachureGap=4;jiggle=2;curveFitting=1;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;fontSize=20;fontStyle=0" parent="1" vertex="1">
+                    <mxGeometry x="-753" y="168.5" width="313" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;An app/bot must have a Microsoft Application ID.&lt;br&gt;BigHead App here contains the BotApi connection endpoint, it will forward requests from MS Teams to our BotApi (Ref2)&lt;br&gt;&lt;/span&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;align=left;rounded=1;sketch=1;curveFitting=1;jiggle=2;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="-627" y="308" width="463" height="134" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;Azure Bot offers both standard and paid tier. Standard tier is also free tier, it does not charge anything. Standard tier is enough for Bighead project. (Ref3)&lt;br&gt;&lt;/span&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;align=left;rounded=1;sketch=1;curveFitting=1;jiggle=2;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="-632" y="453" width="473" height="122" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;Bot Framework Emulator can be used to replace the Bot Service and MS Teams for testing the BotAPI.&lt;br&gt;&lt;br&gt;&lt;/span&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;align=left;rounded=1;sketch=1;curveFitting=1;jiggle=2;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="-600" y="777" width="473" height="122" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;Adaptor means to be able to understand the incoming requests. Depending on the Channel, there should have a corresponding Adaptor.&lt;br&gt;&lt;/span&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;align=left;rounded=1;sketch=1;curveFitting=1;jiggle=2;verticalAlign=top;" parent="1" vertex="1">
+                    <mxGeometry x="89" y="317" width="463" height="134" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="&lt;span style=&quot;font-size: 20px;&quot;&gt;Probably the Azure Bot only holds connection information. MS Teams will make direct connections to the BotApi (Ref4)&lt;br&gt;&lt;/span&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fontColor=#000000;darkOpacity=0.05;fillColor=#FFF9B2;strokeColor=none;fillStyle=solid;direction=west;gradientDirection=north;gradientColor=#FFF2A1;shadow=1;size=20;pointerEvents=1;hachureGap=4;fontFamily=Architects Daughter;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DArchitects%2BDaughter;align=left;rounded=1;sketch=1;curveFitting=1;jiggle=2;verticalAlign=top;" vertex="1" parent="1">
+                    <mxGeometry x="-1128" y="407" width="473" height="122" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
