@@ -4,4 +4,4 @@
     * (3) Personal chat
     * (2) Channel
     
-    ![Types of conversions](/20241115-appendix-types-of-conversations.png "Types of conversions")
+    ![Types of conversions](20241115-appendix-types-of-conversations.png "Types of conversions")
