@@ -12,11 +12,13 @@ public class AdapterWithErrorHandler : CloudAdapter
     (
         BotFrameworkAuthentication auth, 
         ILogger<CloudAdapter> logger,
-        InAndOutActivityTracking activityTracking
+        InAndOutActivityTracking activityTracking,
+        SetupAi setupAi
     )
         : base(auth, logger)
     {
         Use(activityTracking);
+        Use(setupAi);
 
         OnTurnError = async (turnContext, exception) =>
         {

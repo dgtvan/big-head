@@ -60,17 +60,24 @@ public class InAndOutActivityTrackingService
             _dbContext.Threads.Add(thread);
         }
 
-        if (activity.Conversation.ConversationType.Equals(TeamsConversationType.GroupChat, StringComparison.OrdinalIgnoreCase))
+        if (activity.Conversation.ConversationType is null)
         {
-            thread.Type = ThreadType.Meeting;
-        }
-        else if (activity.Conversation.ConversationType.Equals(TeamsConversationType.Personal, StringComparison.OrdinalIgnoreCase))
-        {
-            thread.Type = ThreadType.Personal;
+            thread.Type = ThreadType.Emulator;
         }
         else
         {
-            throw new NotImplementedException();
+            if (activity.Conversation.ConversationType.Equals(TeamsConversationType.GroupChat, StringComparison.OrdinalIgnoreCase))
+            {
+                thread.Type = ThreadType.Meeting;
+            }
+            else if (activity.Conversation.ConversationType.Equals(TeamsConversationType.Personal, StringComparison.OrdinalIgnoreCase))
+            {
+                thread.Type = ThreadType.Personal;
+            }
+            else
+            {
+                throw new NotImplementedException($"Not implemented ConversationType {activity.Conversation.ConversationType}");
+            }
         }
 
         if (thread is null)

@@ -403,3 +403,7 @@ FodyWeavers.xsd
 **/database.sqlite
 **/database.sqlite-shm
 **/database.sqlite-wal
+
+# MS Team App
+**/build/
+**/env/

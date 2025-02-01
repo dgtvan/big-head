@@ -13,8 +13,7 @@
     "Emulator": {
       "commandName": "Project",
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT": "Emulator",
-        "TEAMSFX_NOTIFICATION_STORE_FILENAME": ".notification.testtoolstore.json"
+        "DOTNET_ENVIRONMENT": "Emulator"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5130",
@@ -23,7 +22,7 @@
     "Development": {
       "commandName": "Project",
       "environmentVariables": {
-        "DOTNET_ENVIRONMENT ": "Development"
+        "DOTNET_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5130",
