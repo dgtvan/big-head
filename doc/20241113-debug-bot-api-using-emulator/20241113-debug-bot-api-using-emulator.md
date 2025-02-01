@@ -8,3 +8,9 @@ This is how to test the BotApi using an emulator channel.
 
 3/ Test connection.
 ![Emulator profile](20241113-debug-test-emulator.png "Emulator profile")
+
+## Known issue
+
+1/ The API throws the error "No Authentication header".
+
+You must make sure the `BOT_ID` and `BOT_PASSWORD` be empty in the `appsettings.json`, `appsettings.Emulator.json`, and `secret.json` (if you are using User Secret).
