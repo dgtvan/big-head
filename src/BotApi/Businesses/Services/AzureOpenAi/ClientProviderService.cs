@@ -4,7 +4,7 @@ using OpenAI.Assistants;
 using OpenAI.Files;
 using System.ClientModel;
 
-namespace BotApi.Businesses.Services.AzureOpenAi;
+namespace BotApi.Businesses.Services.AzureOpenAI;
 
 public class ClientProviderService
 {

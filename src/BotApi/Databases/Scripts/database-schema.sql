@@ -4,14 +4,14 @@ drop table if exists Author;
 drop table if exists Thread;
 
 
--- Create Author Table
+-- Create table: Author
 CREATE TABLE Author (
     Id INT PRIMARY KEY IDENTITY,
     ReferenceId NVARCHAR(200),
     Name NVARCHAR(100) NOT NULL
 );
 
--- Create Thread Table
+-- Create table: Thread
 CREATE TABLE Thread (
     Id INT PRIMARY KEY IDENTITY,
     ReferenceId NVARCHAR(200),
@@ -21,11 +21,12 @@ CREATE TABLE Thread (
     AiAssistantId NVARCHAR(200)
 );
 
--- Create Message Table
+-- Create table: Message
 CREATE TABLE Message (
     Id INT PRIMARY KEY IDENTITY,
     ReferenceId NVARCHAR(200),
     Text NVARCHAR(1000) NOT NULL,
+    AiText NVARCHAR(1000) NULL,
     Timestamp DATETIME2 NOT NULL,
     AuthorId INT NOT NULL,
     ThreadId INT NOT NULL,
@@ -33,7 +34,7 @@ CREATE TABLE Message (
     FOREIGN KEY (ThreadId) REFERENCES Thread(Id)
 );
 
--- Create File Table
+-- Create table: File
 CREATE TABLE [File] (
     Id INT PRIMARY KEY IDENTITY NOT NULL,
     ReferenceId NVARCHAR(200),

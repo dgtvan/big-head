@@ -3,8 +3,8 @@ using BotApi;
 using BotApi.Bots;
 using BotApi.Bots.Adapters;
 using BotApi.Bots.Middlewares;
-using BotApi.Businesses.Services;
-using BotApi.Businesses.Services.AzureOpenAi;
+using BotApi.Businesses.Services.AzureOpenAI;
+using BotApi.Businesses.Services.MessageTrackingService;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs.Memory.Scopes;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
@@ -46,8 +46,8 @@ builder.Services.AddScoped<CloudAdapter, AdapterWithErrorHandler>();
 builder.Services.AddScoped<IBotFrameworkHttpAdapter>(sp => sp.GetRequiredService<CloudAdapter>());
 builder.Services.AddScoped<BotAdapter>(sp => sp.GetRequiredService<CloudAdapter>());
 builder.Services.AddScoped<IStorage, MemoryStorage>();
-builder.Services.AddScoped<InAndOutActivityTracking>();
-builder.Services.AddScoped<SetupAi>();
+builder.Services.AddScoped<TrackMessage>();
+builder.Services.AddScoped<TriggerAI>();
 builder.Services.AddScoped<BotApplicationBuilder>();
 builder.Services.AddScoped<IBot, BotApplication>(sp =>
     sp.GetRequiredService<BotApplicationBuilder>().BuildBot()
@@ -57,7 +57,7 @@ builder.Services.AddDbContext<BotDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BotDatabase"))
 , ServiceLifetime.Transient); // TODO: A multi-threaded like Web Application. DBContext should be transient?
 
-builder.Services.AddScoped<InAndOutActivityTrackingService>();
+builder.Services.AddScoped<MessageTrackingService>();
 
 builder.Services.AddSingleton<ClientProviderService>();
 builder.Services.AddScoped<ThreadService>();

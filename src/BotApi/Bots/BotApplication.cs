@@ -25,10 +25,10 @@ public class BotApplication : Application<TurnState>
     {
         OnActivity(
             (context, _) => Task.FromResult(true),
-            async (context, state, cancelToken) =>
+            async (turnContext, state, cancelToken) =>
             {
                 //_logger.LogInformation("Received message: {message}", context.Activity.Text);
-                await context.SendActivityAsync($"(Echo) {context.Activity.Text}", cancellationToken: cancelToken);
+                await turnContext.SendActivityAsync($"(Echo) {turnContext.Activity.Text}", cancellationToken: cancelToken);
                 await Task.CompletedTask;
             }
         );

@@ -3,40 +3,38 @@ using BotApi.Databases.Models;
 using Microsoft.Bot.Schema;
 using Thread = BotApi.Databases.Models.Thread;
 
-namespace BotApi.Businesses.Services;
+namespace BotApi.Businesses.Services.MessageTrackingService;
 
-public class InAndOutActivityTrackingService
+public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotDbContext dbContext)
 {
-    private readonly BotDbContext _dbContext;
-
-    public InAndOutActivityTrackingService(BotDbContext dbContext)
+    public Message TrackIncomingActivity(Activity activity)
     {
-        _dbContext = dbContext;
+        return Track(activity);
     }
 
-    public void TrackIncomingActivity(Activity activity)
+    public Message TrackOutgoingActivity(Activity activity)
     {
-        Track(activity);
+        return Track(activity);
     }
 
-    public void TrackOutgoingActivity(Activity activity)
-    {
-        Track(activity);
-    }
-
-    private void Track(Activity activity)
+    public bool ShouldTrack(Activity activity)
     {
         if (activity.Type != ActivityTypes.Message)
         {
             // For simplicity, we only track messages for now.
-            return;
+            logger.BotInformation("Activity type is {activityType}, which is not a message. Should not track it.", activity.Type);
         }
 
+        return activity.Type == ActivityTypes.Message;
+    }
+
+    private Message Track(Activity activity)
+    {
         //
         // Author
         //
         var authorReferenceId = activity.From.Id;
-        var author = _dbContext.Authors.FirstOrDefault(a => a.ReferenceId == authorReferenceId);
+        var author = dbContext.Authors.FirstOrDefault(a => a.ReferenceId == authorReferenceId);
         if (author == null)
         {
             author = new Author
@@ -44,20 +42,20 @@ public class InAndOutActivityTrackingService
                 ReferenceId = authorReferenceId,
                 Name = activity.From.Name
             };
-            _dbContext.Authors.Add(author);
+            dbContext.Authors.Add(author);
         }
 
         //
         // Thread
         //
-        Thread? thread = _dbContext.Threads.FirstOrDefault(t => t.ReferenceId == activity.Conversation.Id);
+        var thread = dbContext.Threads.FirstOrDefault(t => t.ReferenceId == activity.Conversation.Id);
         if (thread == null)
         {
             thread = new Thread()
             {
                 ReferenceId = activity.Conversation.Id
             };
-            _dbContext.Threads.Add(thread);
+            dbContext.Threads.Add(thread);
         }
 
         if (activity.Conversation.ConversationType is null)
@@ -96,7 +94,7 @@ public class InAndOutActivityTrackingService
             Text = activity.Text,
             Timestamp = activity.Timestamp?.UtcDateTime ?? DateTime.UtcNow
         };
-        _dbContext.Messages.Add(message);
+        dbContext.Messages.Add(message);
 
 
         //
@@ -109,6 +107,8 @@ public class InAndOutActivityTrackingService
         //  "emulator" for the Bot Framework Emulator
         //  "directline" for Direct Line
 
-        _dbContext.SaveChanges();
+        dbContext.SaveChanges();
+
+        return message;
     }
 }

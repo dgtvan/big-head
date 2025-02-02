@@ -12,13 +12,13 @@ public class AdapterWithErrorHandler : CloudAdapter
     (
         BotFrameworkAuthentication auth, 
         ILogger<CloudAdapter> logger,
-        InAndOutActivityTracking activityTracking,
-        SetupAi setupAi
+        TrackMessage trackMessage,
+        TriggerAI triggerAI
     )
         : base(auth, logger)
     {
-        Use(activityTracking);
-        Use(setupAi);
+        Use(trackMessage);
+        Use(triggerAI);
 
         OnTurnError = async (turnContext, exception) =>
         {
@@ -32,8 +32,9 @@ public class AdapterWithErrorHandler : CloudAdapter
             if (turnContext.Activity.Type == ActivityTypes.Message)
             {
                 // Send a message to the user
-                await turnContext.SendActivityAsync($"The bot encountered an unhandled error: {exception.Message}");
-                await turnContext.SendActivityAsync("To continue to run this bot, please fix the bot source code.");
+                //await turnContext.SendActivityAsync($"The bot encountered an unhandled error: {exception.Message}");
+                //await turnContext.SendActivityAsync("To continue to run this bot, please fix the bot source code.");
+                await turnContext.SendActivityAsync("Oops. Something went wrong. Hmm... Could you repeat it again, please ~");
 
                 // Send a trace activity
                 await turnContext.TraceActivityAsync("OnTurnError Trace", exception.Message, "https://www.botframework.com/schemas/error", "TurnError");
