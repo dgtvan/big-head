@@ -67,3 +67,9 @@ CREATE TABLE AIMessage (
     MessageId INT NOT NULL,
     FOREIGN KEY (MessageId) REFERENCES Message(Id)
 );
+
+-- Create table: AIUserMessagePrompt
+CREATE TABLE AIUserMessagePrompt (
+    Id INT PRIMARY KEY IDENTITY,
+    Prompt NVARCHAR(2048) NOT NULL,
+);

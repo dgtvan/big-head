@@ -1,4 +1,5 @@
 ﻿using System.ClientModel;
+using System.Diagnostics.Metrics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using BotApi.Databases.Models;
@@ -25,6 +26,13 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
         var logContext = LogContext.Create(message.Thread, message);
 
         logger.BotInformation(logContext, "Creating a new message to the AI Thread");
+
+        // TODO: Suggestion for more friendly reference response.
+//        Include references after the answer in this format: """
+//# References
+//**[Section Title Here](https://section-link-here.com/path)**
+//> Exact content body of the references
+//"""
 
         //string aiMessageText =
         //        $"""
@@ -197,17 +205,23 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
                 {
                     logger.BotInformation("Reading the message content {counter}", messageContentCounter++);
 
-                    // TODO: Handle image, image annotation,...
-                    // For now, we only handle the text content.
-                    stringBuilder.AppendLine(content.Text);
+                    string contentText = string.Empty;
 
                     foreach (TextAnnotation annotation in content.TextAnnotations)
                     {
                         logger.BotInformation("Annotation Start index {start}", annotation.StartIndex);
                         logger.BotInformation("Annotation End index {start}", annotation.EndIndex);
                         logger.BotInformation("Annotation TextToReplace {start}", annotation.TextToReplace);
-                        logger.BotInformation("Annotation InputField {start}", annotation.InputFileId);
+                        logger.BotInformation("Annotation InputField {start}", annotation.InputFileId); // File Id in the vectoer store
+
+                        // TODO: Handle the text annotation
+                        // For now, I will just remove the citation data.
+                        contentText = content.Text.Replace(annotation.TextToReplace, string.Empty);
                     }
+
+                    // TODO: Handle image, image annotation,...
+                    // For now, we only handle the text content.
+                    stringBuilder.AppendLine(contentText);
 
                     stringBuilder.AppendLine();
                 }
