@@ -1,4 +1,7 @@
-﻿using BotApi.Databases.Models;
+﻿using System.ClientModel;
+using System.Runtime.CompilerServices;
+using System.Text;
+using BotApi.Databases.Models;
 using Microsoft.EntityFrameworkCore;
 using OpenAI.Assistants;
 using Assistant = OpenAI.Assistants.Assistant;
@@ -23,15 +26,19 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
 
         logger.BotInformation(logContext, "Creating a new message to the AI Thread");
 
+        //string aiMessageText =
+        //        $"""
+        //            The message has two parts:
+        //                1. Message Author Name: The name of the author of the message.
+        //                2. Message Content: The content of the message.
+
+        //            Below is the message detail:
+        //                1. Message Author Name: {message.Author?.Name}
+        //                2. Message Content: {message.Text}
+        //        """;
         string aiMessageText =
                 $"""
-                    The message has two parts:
-                        1. Message Author Name: The name of the author of the message.
-                        2. Message Content: The content of the message.
-
-                    Below is the message detail:
-                        1. Message Author Name: {message.Author?.Name}
-                        2. Message Content: {message.Text}
+                    I am {message.Author?.Name}. {message.Text}
                 """;
 
         MessageCreationOptions options = new()
@@ -48,7 +55,8 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
 
         logger.BotInformation(logContext, "API calling has been completed");
 
-        message.AiText = aiMessageText;
+        message.AiMessageId = aiMessage.Id;
+        message.AiMessageText = aiMessageText;
         dbContext.SaveChanges();
 
         logger.BotInformation(logContext, "Saved the AI Message Text to the database");
@@ -60,12 +68,25 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
             aiMessage = await clientProvider.AssistantClient.GetMessageAsync(aiMessage.ThreadId, aiMessage.Id, cancellationToken);
         }
 
+        // I don't know why the Status is always null
         logger.BotInformation(logContext, "Status: {status}", aiMessage.Status);
+
+        logger.BotInformation(logContext, "Created at: {at}", aiMessage.CreatedAt.DateTime);
+        if (aiMessage.CompletedAt is not null)
+        {
+            logger.BotInformation(logContext, "Completed at: {at}", aiMessage.CompletedAt?.DateTime);
+        }
+        if (aiMessage.IncompleteAt is not null)
+        {
+            logger.BotInformation(logContext, "InCompleted at: {at}", aiMessage.IncompleteAt?.DateTime);
+        }
 
         if (aiMessage.IncompleteDetails?.Reason is not null)
         {
             logger.BotInformation(logContext, "Incomplete detail: {detail}", aiMessage.IncompleteDetails.Reason);
         }
+
+        logger.BotInformation(logContext, "AI Message Id: {id}", aiMessage.Id);
     }
 
     public async Task<bool> RequireAIResponse(Message message, CancellationToken cancellationToken = default)
@@ -75,11 +96,14 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
         return await Task.FromResult(true);
     }
 
-    public async Task<string> RespondToUserMessage(Message message)
+    public async Task<string> RespondToUserMessage(Message message, CancellationToken cancellationToken = default)
     {
         await AskAssistantToRespondToUserMessage(message);
-        
-        string aiResponseText = await GetTheAssistantMessage();
+
+        ArgumentNullException.ThrowIfNull(message.Thread?.AiThreadId);
+        ArgumentNullException.ThrowIfNull(message.AiMessageId);
+
+        string aiResponseText = await GetTheAssistantMessage(message.Thread.AiThreadId, message.AiMessageId, cancellationToken);
         return aiResponseText;
     }
 
@@ -140,12 +164,65 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
         {
             logger.BotInformation(logContext, "Last Error (Code: {code}: {error}", runResult.LastError.Code, runResult.LastError.Message);
         }
-
     }
 
-    private async Task<string> GetTheAssistantMessage()
+    private async Task<string> GetTheAssistantMessage(string aiThreadId, string lastUserMessageId, CancellationToken cancellationToken = default)
     {
-        return await Task.FromResult(string.Empty);
+        logger.BotInformation("Getting the assistant messages");
+
+        MessageCollectionOptions options = new()
+        {
+            // Given that the assisant only produces one message after a succesful run, the following means to get the assistant message only.
+            // Why is it "BeforeId" instead of "AfterId"? I thought it would be "AferId", however, messages are ordered by descending time stamp by default which means the last message is on top. Therefore, "BeforeId" is the correct one for me.
+            BeforeId = lastUserMessageId,
+            PageSizeLimit = 1,
+        };
+
+        AsyncCollectionResult<ThreadMessage> messages = clientProvider.AssistantClient.GetMessagesAsync(aiThreadId, options, cancellationToken);
+
+        logger.BotInformation("Extracting the assistant message");
+        StringBuilder stringBuilder = new();
+
+        ConfiguredCancelableAsyncEnumerable<ThreadMessage>.Enumerator enumerator = messages.WithCancellation(cancellationToken).GetAsyncEnumerator();
+        try
+        {
+            int threadMessageCounter = 1;
+            while (await enumerator.MoveNextAsync())
+            {
+                ThreadMessage assistantMessage = enumerator.Current;
+                logger.BotInformation("Reading the thread message {counter}", threadMessageCounter++);
+
+                int messageContentCounter = 1;
+                foreach (MessageContent content in assistantMessage.Content)
+                {
+                    logger.BotInformation("Reading the message content {counter}", messageContentCounter++);
+
+                    // TODO: Handle image, image annotation,...
+                    // For now, we only handle the text content.
+                    stringBuilder.AppendLine(content.Text);
+
+                    foreach (TextAnnotation annotation in content.TextAnnotations)
+                    {
+                        logger.BotInformation("Annotation Start index {start}", annotation.StartIndex);
+                        logger.BotInformation("Annotation End index {start}", annotation.EndIndex);
+                        logger.BotInformation("Annotation TextToReplace {start}", annotation.TextToReplace);
+                        logger.BotInformation("Annotation InputField {start}", annotation.InputFileId);
+                    }
+
+                    stringBuilder.AppendLine();
+                }
+            }
+        }
+        finally
+        {
+            await enumerator.DisposeAsync();
+        }
+
+        string finalResponseText = stringBuilder.ToString();
+
+        logger.BotInformation("The assistant message processing has been completed");
+
+        return finalResponseText;
     }
 
     private async Task SetupThread(Thread thread)
@@ -161,7 +238,7 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
             var tmpThread = dbContext.Threads.AsNoTracking().FirstOrDefault(t => t.Type == ThreadType.Emulator && t.AiThreadId != null);
             if (tmpThread != null)
             {
-                logger.BotInformation(thread, "It is an Emulater thread. We will re-use the shared AI Thread");
+                logger.BotInformation(thread, "It is an Emulater thread. We will re-use an existing AI Thread created for Emulator");
 
                 thread.AiThreadId = tmpThread.AiThreadId;
                 dbContext.SaveChanges();
@@ -198,7 +275,7 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
             var tmpThread = dbContext.Threads.AsNoTracking().FirstOrDefault(t => t.Type == ThreadType.Emulator && t.AiAssistantId != null);
             if (tmpThread != null)
             {
-                logger.BotInformation(thread, "It is an Emulater thread. We will re-use the shared AI Assistant.");
+                logger.BotInformation(thread, "It is an Emulater thread. We will re-use an existing AI Assistant created for Emulator");
 
                 thread.AiAssistantId = tmpThread.AiAssistantId;
                 dbContext.SaveChanges();

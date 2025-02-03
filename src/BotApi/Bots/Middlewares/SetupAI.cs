@@ -4,7 +4,7 @@ using Microsoft.Bot.Builder;
 
 namespace BotApi.Bots.Middlewares;
 
-public class TriggerAI(ILogger<TriggerAI> logger, ThreadService aiThreadService) : Microsoft.Bot.Builder.IMiddleware
+public class SetupAI(ThreadService aiThreadService) : Microsoft.Bot.Builder.IMiddleware
 {
     public async Task OnTurnAsync(ITurnContext turnContext, NextDelegate next, CancellationToken cancellationToken)
     {
@@ -18,7 +18,6 @@ public class TriggerAI(ILogger<TriggerAI> logger, ThreadService aiThreadService)
 
         if (message is null)
         {
-            logger.BotWarning("The message does not exist in the TurnState which means it should be ignored. Do not trigger any AI actions for the message.");
             return;
         }
 
@@ -28,12 +27,5 @@ public class TriggerAI(ILogger<TriggerAI> logger, ThreadService aiThreadService)
         }
 
         await aiThreadService.SetupThread(message.Thread, cancellationToken);
-        
-        await aiThreadService.AddMessage(message, cancellationToken);
-
-        if (await aiThreadService.RequireAIResponse(message, cancellationToken))
-        {
-            await aiThreadService.RespondToUserMessage(message);
-        }
     }
 }

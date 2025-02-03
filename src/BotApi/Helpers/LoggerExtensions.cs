@@ -66,13 +66,13 @@ public static class LoggerExtensions
 
         string[] contextData =
             [
-                thread is null  ? string.Empty : $"Thread Id {thread.Id} (Name: {thread.Name})",
+                thread is null  ? string.Empty : $"Thread Id {thread.Id} (Name: {thread.Name ?? _notAvailable})",
                 logRelationId is null   ? string.Empty : $"Log Relation Id {logRelationId}",
                 message is null ? string.Empty : $"Message Id {message.Id}",
-                author is null  ? string.Empty : $"Message Author Id {author.Id} (Name: {author.Name})"
+                author is null  ? string.Empty : $"Message Author Id {author.Id} (Name: {author.Name ?? _notAvailable})"
             ];
 
-        string logContext = string.Join(", ", contextData.Where(x => x is not null));
+        string logContext = string.Join(", ", contextData.Where(x => !string.IsNullOrWhiteSpace(x)));
 
         return $"{logContext}. {logMessage}";
     }

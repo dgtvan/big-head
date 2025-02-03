@@ -14,7 +14,8 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
 
     public Message TrackOutgoingActivity(Activity activity)
     {
-        return Track(activity);
+        Message message = Track(activity);
+        return message;
     }
 
     public bool ShouldTrack(Activity activity)
@@ -22,10 +23,15 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
         if (activity.Type != ActivityTypes.Message)
         {
             // For simplicity, we only track messages for now.
-            logger.BotInformation("Activity type is {activityType}, which is not a message. Should not track it.", activity.Type);
+            logger.BotInformation(
+                "Activity type is {activityType}, which is not a message." +
+                " We ignore it completely, no any actions applied to it e.g. Tracking, AI...", 
+                activity.Type);
+
+            return false;
         }
 
-        return activity.Type == ActivityTypes.Message;
+        return true;
     }
 
     private Message Track(Activity activity)

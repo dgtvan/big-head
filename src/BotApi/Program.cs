@@ -47,7 +47,7 @@ builder.Services.AddScoped<IBotFrameworkHttpAdapter>(sp => sp.GetRequiredService
 builder.Services.AddScoped<BotAdapter>(sp => sp.GetRequiredService<CloudAdapter>());
 builder.Services.AddScoped<IStorage, MemoryStorage>();
 builder.Services.AddScoped<TrackMessage>();
-builder.Services.AddScoped<TriggerAI>();
+builder.Services.AddScoped<SetupAI>();
 builder.Services.AddScoped<BotApplicationBuilder>();
 builder.Services.AddScoped<IBot, BotApplication>(sp =>
     sp.GetRequiredService<BotApplicationBuilder>().BuildBot()

@@ -13,12 +13,12 @@ public class AdapterWithErrorHandler : CloudAdapter
         BotFrameworkAuthentication auth, 
         ILogger<CloudAdapter> logger,
         TrackMessage trackMessage,
-        TriggerAI triggerAI
+        SetupAI setupAI
     )
         : base(auth, logger)
     {
         Use(trackMessage);
-        Use(triggerAI);
+        Use(setupAI);
 
         OnTurnError = async (turnContext, exception) =>
         {
@@ -26,7 +26,7 @@ public class AdapterWithErrorHandler : CloudAdapter
             // NOTE: In production environment, you should consider logging this to
             // Azure Application Insights. Visit https://aka.ms/bottelemetry to see how
             // to add telemetry capture to your bot.
-            logger.LogError(exception, $"[OnTurnError] unhandled error : {exception.Message}");
+            logger.LogError(exception, $"[OnTurnError] Unhandled error : {exception.Message}");
 
             // Only send error message for user messages, not for other message types so the bot doesn't spam a channel or chat.
             if (turnContext.Activity.Type == ActivityTypes.Message)
@@ -34,7 +34,7 @@ public class AdapterWithErrorHandler : CloudAdapter
                 // Send a message to the user
                 //await turnContext.SendActivityAsync($"The bot encountered an unhandled error: {exception.Message}");
                 //await turnContext.SendActivityAsync("To continue to run this bot, please fix the bot source code.");
-                await turnContext.SendActivityAsync("Oops. Something went wrong. Hmm... Could you repeat it again, please ~");
+                await turnContext.SendActivityAsync("Oops. Something went wrong. Hmm... Could you please repeat it again?");
 
                 // Send a trace activity
                 await turnContext.TraceActivityAsync("OnTurnError Trace", exception.Message, "https://www.botframework.com/schemas/error", "TurnError");
