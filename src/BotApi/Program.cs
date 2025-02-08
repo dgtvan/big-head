@@ -32,7 +32,7 @@ builder.Services.AddHttpContextAccessor();
 
 // Create the Bot Framework Authentication to be used with the Bot Adapter.
 var config = builder.Configuration.Get<ConfigOptions>();
-builder.Services.AddScoped(ConfigOptions => Options.Create(config!));
+builder.Services.AddOptions<ConfigOptions>().Bind(builder.Configuration);
 
 builder.Configuration["MicrosoftAppType"] = "MultiTenant";
 builder.Configuration["MicrosoftAppId"] = config?.BOT_ID;
