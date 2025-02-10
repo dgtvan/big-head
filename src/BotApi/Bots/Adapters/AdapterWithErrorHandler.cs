@@ -13,7 +13,7 @@ public class AdapterWithErrorHandler : CloudAdapter
         BotFrameworkAuthentication auth, 
         ILogger<CloudAdapter> logger,
         TrackMessage trackMessage,
-        SetupAI setupAI
+        SetupAi setupAI
     )
         : base(auth, logger)
     {

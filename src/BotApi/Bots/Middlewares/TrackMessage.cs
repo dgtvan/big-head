@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using BotApi.Businesses.Services.MessageTrackingService;
+﻿using BotApi.Businesses.Services.MessageTrackingService;
 using BotApi.Databases.Models;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Schema;
-using Microsoft.Teams.AI.State;
 using Activity = Microsoft.Bot.Schema.Activity;
 
 namespace BotApi.Bots.Middlewares;
@@ -24,46 +22,39 @@ public class TrackMessage : Microsoft.Bot.Builder.IMiddleware
 
     public async Task OnTurnAsync(ITurnContext turnContext, NextDelegate next, CancellationToken cancellationToken)
     {
-        // Handle incoming messages
-        Message? incommingMessage = IncomingMessage(turnContext.Activity);
-        if (incommingMessage != null)
-        {
-            turnContext.TurnState.SetMessage(incommingMessage);
-        }
+        IncomingMessage(turnContext);
+        OutgoingMessage(turnContext);
 
-        // Handle outgoing messages.
-        SendActivitiesHandler sendActivityHandler = (ITurnContext turnContext, List<Activity> activities, Func<Task<ResourceResponse[]>> next) =>
+        await next(cancellationToken);
+    }
+
+    private void IncomingMessage(ITurnContext turnContext)
+    {
+        if (!_messageTrackingService.ShouldTrack(turnContext.Activity))
+        {
+            return;
+        };
+
+        Message message = _messageTrackingService.TrackIncomingActivity(turnContext.Activity);
+        turnContext.TurnState.SetMessage(message);
+    }
+
+    private void OutgoingMessage(ITurnContext turnContext)
+    {
+        SendActivitiesHandler sendActivityHandler = (ITurnContext _, List<Activity> activities, Func<Task<ResourceResponse[]>> next) =>
         {
             activities.ForEach(activity =>
             {
-                OutgoingMessage(activity);
+                if (!_messageTrackingService.ShouldTrack(activity))
+                {
+                    return;
+                };
+
+                _messageTrackingService.TrackOutgoingActivity(activity);
             });
 
             return next();
         };
         turnContext.OnSendActivities(sendActivityHandler);
-
-        await next(cancellationToken);
-    }
-
-    private Message? IncomingMessage(Activity activity)
-    {
-        if (!_messageTrackingService.ShouldTrack(activity))
-        {
-            return null;
-        };
-
-        Message message = _messageTrackingService.TrackIncomingActivity(activity);
-        return message;
-    }
-
-    private void OutgoingMessage(Activity activity)
-    {
-        if (!_messageTrackingService.ShouldTrack(activity))
-        {
-            return;
-        };
-
-        _messageTrackingService.TrackOutgoingActivity(activity);
     }
 }
