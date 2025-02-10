@@ -5,6 +5,7 @@ using BotApi.Bots.Adapters;
 using BotApi.Bots.Middlewares;
 using BotApi.Businesses.Services.AzureOpenAI;
 using BotApi.Businesses.Services.MessageTrackingService;
+using BotApi.Databases;
 using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs.Memory.Scopes;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;

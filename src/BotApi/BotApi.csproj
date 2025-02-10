@@ -23,4 +23,8 @@
     </Content>
     <Content Include="Databases\Scripts\database-schema.sql" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Databases\Models\" />
+  </ItemGroup>
 </Project>

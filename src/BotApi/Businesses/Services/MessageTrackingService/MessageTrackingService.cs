@@ -1,4 +1,6 @@
 ﻿using BotApi.Businesses.Constants;
+using BotApi.Databases;
+using BotApi.Databases.Enums;
 using BotApi.Databases.Models;
 using Microsoft.Bot.Schema;
 using Thread = BotApi.Databases.Models.Thread;
@@ -39,8 +41,8 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
         //
         // Author
         //
-        var authorReferenceId = activity.From.Id;
-        var author = dbContext.Authors.FirstOrDefault(a => a.ReferenceId == authorReferenceId);
+        string? authorReferenceId = activity.From.Id;
+        Author? author = dbContext.Authors.FirstOrDefault(a => a.ReferenceId == authorReferenceId);
         if (author == null)
         {
             author = new Author
@@ -54,7 +56,7 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
         //
         // Thread
         //
-        var thread = dbContext.Threads.FirstOrDefault(t => t.ReferenceId == activity.Conversation.Id);
+        Thread? thread = dbContext.Threads.FirstOrDefault(t => t.ReferenceId == activity.Conversation.Id);
         if (thread == null)
         {
             thread = new Thread()
@@ -64,7 +66,7 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
             dbContext.Threads.Add(thread);
         }
 
-        if (activity.Conversation.ConversationType is null)
+        if (IsEmulator(activity))
         {
             thread.Type = ThreadType.Emulator;
         }
@@ -93,12 +95,13 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
         //
         // Message
         //
-        var message = new Message
+        Message message = new()
         {
-            Author = author,
-            Thread = thread,
-            Text = activity.Text,
-            Timestamp = activity.Timestamp?.UtcDateTime ?? DateTime.UtcNow
+            ReferenceId = IsEmulator(activity) ? BotIdentity.MessageReferenceId : activity.Id,
+            Author      = author,
+            Thread      = thread,
+            Text        = activity.Text,
+            Timestamp   = activity.Timestamp?.UtcDateTime ?? DateTime.UtcNow
         };
         dbContext.Messages.Add(message);
 
@@ -116,5 +119,10 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
         dbContext.SaveChanges();
 
         return message;
+    }
+
+    private static bool IsEmulator(Activity activity)
+    {
+        return activity.Conversation.ConversationType is null;
     }
 }

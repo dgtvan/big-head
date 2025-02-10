@@ -8,7 +8,7 @@ public class SetupAI(ThreadService aiThreadService) : Microsoft.Bot.Builder.IMid
 {
     public async Task OnTurnAsync(ITurnContext turnContext, NextDelegate next, CancellationToken cancellationToken)
     {
-        await Handle(turnContext, cancellationToken);
+        //await Handle(turnContext, cancellationToken);
         await next(cancellationToken);
     }
 

@@ -1,7 +1,8 @@
 ﻿using System.ClientModel;
-using System.Diagnostics.Metrics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using BotApi.Databases;
+using BotApi.Databases.Enums;
 using BotApi.Databases.Models;
 using Microsoft.EntityFrameworkCore;
 using OpenAI.Assistants;
@@ -12,6 +13,7 @@ namespace BotApi.Businesses.Services.AzureOpenAI;
 
 public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext, ClientProviderService clientProvider)
 {
+    // ReSharper disable once MethodOverloadWithOptionalParameter
     public async Task<Thread> SetupThread(Thread thread, CancellationToken cancellationToken = default)
     {
         await SetupThread(thread);
@@ -46,15 +48,13 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
         //        """;
         string aiMessageText =
                 $"""
-                    I am {message.Author?.Name}. {message.Text}
+                    I am {message.Author.Name}. {message.Text}
                 """;
 
-        MessageCreationOptions options = new()
-        {
-        };
+        MessageCreationOptions options = new();
 
         ThreadMessage aiMessage = await clientProvider.AssistantClient.CreateMessageAsync(
-            message.Thread.AiThreadId,
+            message.Thread.AiThread?.ReferenceId ?? throw new NullReferenceException("AI Thread is null"),
             MessageRole.User,
             [ aiMessageText ],
             options,
@@ -63,8 +63,12 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
 
         logger.BotInformation(logContext, "API calling has been completed");
 
-        message.AiMessageId = aiMessage.Id;
-        message.AiMessageText = aiMessageText;
+        if (message.AiMessage is null)
+        {
+            throw new NullReferenceException("AI Message Id is null");
+        }
+        message.AiMessage.ReferenceId = aiMessage.Id;
+        message.AiMessage.Text = aiMessageText;
         dbContext.SaveChanges();
 
         logger.BotInformation(logContext, "Saved the AI Message Text to the database");
@@ -97,7 +101,7 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
         logger.BotInformation(logContext, "AI Message Id: {id}", aiMessage.Id);
     }
 
-    public async Task<bool> RequireAIResponse(Message message, CancellationToken cancellationToken = default)
+    public async Task<bool> RequireAiResponse(Message message, CancellationToken cancellationToken = default)
     {
         // TODO: Use a  light weigh AI model to determine if the message requires an AI response.
         // For now, we always require an AI response.
@@ -108,22 +112,23 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
     {
         await AskAssistantToRespondToUserMessage(message);
 
-        ArgumentNullException.ThrowIfNull(message.Thread?.AiThreadId);
+        ArgumentNullException.ThrowIfNull(message.Thread.AiThreadId);
         ArgumentNullException.ThrowIfNull(message.AiMessageId);
 
-        string aiResponseText = await GetTheAssistantMessage(message.Thread.AiThreadId, message.AiMessageId, cancellationToken);
+        string aiThreadId = message.Thread.AiThread?.ReferenceId ?? throw new NullReferenceException("AI Thread is null");
+        string aiMessageId = message.AiMessage?.ReferenceId ?? throw new NullReferenceException("AI Message Id is null");
+        string aiResponseText = await GetTheAssistantMessage(aiThreadId, aiMessageId, cancellationToken);
+
         return aiResponseText;
     }
 
     private async Task AskAssistantToRespondToUserMessage(Message message)
     {
-        ArgumentNullException.ThrowIfNull(message.Thread);
+        Thread thread = message.Thread;
+        string logRelationId = Guid.NewGuid().ToString();
+        LogContext logContext = LogContext.Create(thread, logRelationId);
 
-        var thread = message.Thread;
-        var logRelationId = Guid.NewGuid().ToString();
-        var logContext = LogContext.Create(thread, logRelationId);
-
-        logger.BotInformation(logContext, "Creating a run over a message from the user {authorId} (Name: {authorName}", message.AuthorId, message.Author?.Name ?? "N/A");
+        logger.BotInformation(logContext, "Creating a run over a message from the user {authorId} (Name: {authorName}", message.AuthorId, message.Author.Name);
 
         RunCreationOptions options = new()
         {
@@ -140,10 +145,11 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
         //    ]
         //));
 
-        ThreadRun runResult = await clientProvider.AssistantClient.CreateRunAsync(thread.AiThreadId, thread.AiAssistantId, options);
+        string aiThreadId = thread.AiThread?.ReferenceId ?? throw new NullReferenceException("AI Thread is null");
+        string aiAssistantId = thread.AiThread?.AiAssistant?.ReferenceId ?? throw new NullReferenceException("AI Assistant is null");
+        ThreadRun runResult = await clientProvider.AssistantClient.CreateRunAsync(aiThreadId, aiAssistantId, options);
 
         logger.BotInformation(logContext, "The run has been created");
-
 
         // Reference for the RunStatus: https://platform.openai.com/docs/assistants/deep-dive
         RunStatus[] runningStatus = [RunStatus.RequiresAction, RunStatus.Queued, RunStatus.InProgress, RunStatus.Cancelling];
@@ -151,7 +157,7 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
         {
             logger.BotInformation(logContext, "The run is still running. Waiting for the result...");
             await Task.Delay(1000);
-            runResult = await clientProvider.AssistantClient.GetRunAsync(thread.AiThreadId, runResult.Id);
+            runResult = await clientProvider.AssistantClient.GetRunAsync(aiThreadId, runResult.Id);
         }
 
         logger.BotInformation(logContext, "The run has been completed");
@@ -191,6 +197,7 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
         logger.BotInformation("Extracting the assistant message");
         StringBuilder stringBuilder = new();
 
+        // ReSharper disable once RedundantWithCancellation
         ConfiguredCancelableAsyncEnumerable<ThreadMessage>.Enumerator enumerator = messages.WithCancellation(cancellationToken).GetAsyncEnumerator();
         try
         {
@@ -249,7 +256,7 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
 
         if (thread.Type == ThreadType.Emulator)
         {
-            var tmpThread = dbContext.Threads.AsNoTracking().FirstOrDefault(t => t.Type == ThreadType.Emulator && t.AiThreadId != null);
+            Thread? tmpThread = dbContext.Threads.AsNoTracking().FirstOrDefault(t => t.Type == ThreadType.Emulator && t.AiThreadId != null);
             if (tmpThread != null)
             {
                 logger.BotInformation(thread, "It is an Emulater thread. We will re-use an existing AI Thread created for Emulator");
@@ -264,13 +271,17 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
 
         logger.BotInformation(thread, "Creating AI thread");
 
-        var options = new ThreadCreationOptions();
+        ThreadCreationOptions options = new();
 
         // According to OpenAI document, vector stores have an expiration time. Details here https://platform.openai.com/docs/assistants/tools/file-search#managing-costs-with-expiration-policies
         //options.ToolResources.FileSearch.VectorStoreIds.Add("playground-store");
 
         AssistantThread assistantThread = await clientProvider.AssistantClient.CreateThreadAsync(options);
-        thread.AiThreadId = assistantThread.Id;
+
+        thread.AiThread = new AIThread()
+        {
+            ReferenceId = assistantThread.Id
+        };
         dbContext.SaveChanges();
 
         logger.BotInformation(thread, "Created AI thread");
@@ -278,7 +289,9 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
 
     private async Task SetupAssistant(Thread thread)
     {
-        if (thread.AiAssistantId is not null)
+        AIThread aiThread = thread.AiThread ?? throw new NullReferenceException("AI Thread is null");
+
+        if (aiThread.AiAssistantId is not null)
         {
             logger.BotInformation(thread, "AI Assistant has already been setup");
             return;
@@ -286,22 +299,31 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
 
         if (thread.Type == ThreadType.Emulator)
         {
-            var tmpThread = dbContext.Threads.AsNoTracking().FirstOrDefault(t => t.Type == ThreadType.Emulator && t.AiAssistantId != null);
-            if (tmpThread != null)
+            AIAssistant? aiAssistant =
+                await dbContext
+                    .Threads
+                        .Include(x => x.AiThread)
+                            .ThenInclude(x => x!.AiAssistant)
+                    .AsNoTracking()
+                    .Where(x => x.Type == ThreadType.Emulator && x.AiThread != null && x.AiThread!.AiAssistant != null)
+                    .Select(x => x.AiThread!.AiAssistant)
+                    .FirstOrDefaultAsync();
+
+            if (aiAssistant is not null)
             {
                 logger.BotInformation(thread, "It is an Emulater thread. We will re-use an existing AI Assistant created for Emulator");
 
-                thread.AiAssistantId = tmpThread.AiAssistantId;
+                aiThread.AiAssistantId = aiAssistant.Id;
                 dbContext.SaveChanges();
 
-                logger.BotInformation(thread, "Use the AI Assistant {aiAssistantId}", thread.AiAssistantId);
+                logger.BotInformation(thread, "Use assistant id {assistantId}", aiAssistant.Id);
                 return;
             }
         }
 
         logger.BotInformation(thread, "Creating AI Assistant");
 
-        var options = new AssistantCreationOptions()
+        AssistantCreationOptions options = new()
         {
             Description = "Assistant for the thread {threadId}",
             Instructions = "You answer my questions in a concise, articulate way. Always prioritise looking for answers from the given reference files. Remember to cite what page and file name you used for the answer.",
@@ -321,7 +343,11 @@ public class ThreadService(ILogger<ThreadService> logger, BotDbContext dbContext
         options.ToolResources.FileSearch.VectorStoreIds.Add("vs_ssMco3uOKftXr0vZdHAulqEs"); // Vector store name: playground-store
 
         Assistant assistant = await clientProvider.AssistantClient.CreateAssistantAsync("van-gpt-4o-mini-2024-07-18", options);
-        thread.AiAssistantId = assistant.Id;
+
+        aiThread.AiAssistant = new AIAssistant()
+        {
+            ReferenceId = assistant.Id
+        };
         dbContext.SaveChanges();
 
         logger.BotInformation(thread, "Created AI Assistant");

@@ -26,8 +26,8 @@ public class BotApplication : Application<TurnState>
 
     protected void RegisterHandlers()
     {
-        //Echo(AllRoutes);
-        RespondUsingAI(AllRoutes);
+        Echo(AllRoutes);
+        //RespondUsingAI(AllRoutes);
     }
 
     private void Echo(RouteSelectorAsync selector)
@@ -57,7 +57,7 @@ public class BotApplication : Application<TurnState>
 
                 await _aiThreadService.AddMessage(message, cancelToken);
 
-                if (!await _aiThreadService.RequireAIResponse(message, cancelToken))
+                if (!await _aiThreadService.RequireAiResponse(message, cancelToken))
                 {
                     _logger.BotInformation("The user message does not require an AI response. Skip the AI response sending process.");
                     return;
