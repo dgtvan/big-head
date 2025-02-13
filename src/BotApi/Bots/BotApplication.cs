@@ -1,5 +1,12 @@
-﻿using BotApi.Businesses.Services.AzureOpenAI;
-using BotApi.Databases.Models;
+﻿using BotApi.Businesses.Handlers.AzureOpenAi.AddUserMessage;
+using BotApi.Businesses.Handlers.AzureOpenAi.GetLatestAssistantMessage;
+using BotApi.Businesses.Handlers.AzureOpenAi.RunAssistant;
+using BotApi.Businesses.Handlers.AzureOpenAi.Setup.Assistant;
+using BotApi.Businesses.Handlers.AzureOpenAi.Setup.Thread;
+using BotApi.Businesses.Handlers.AzureOpenAi.ShouldRunAssistant;
+using BotApi.Businesses.Handlers.MessageTracking.GetTrackedMessage;
+using BotApi.Businesses.Services.MessageTrackingService;
+using MediatR;
 using Microsoft.Teams.AI;
 using Microsoft.Teams.AI.State;
 using Microsoft.Bot.Builder;
@@ -9,65 +16,106 @@ namespace BotApi.Bots;
 public class BotApplication : Application<TurnState>
 {
     private readonly ILogger<BotApplication> _logger;
-    private readonly ThreadService _aiThreadService;
+    private readonly IMediator _mediator;
+    private readonly MessageTrackingService _messageTrackingService;
 
     public BotApplication
     (
         ApplicationOptions<TurnState> options,
-        ThreadService aiThreadService
+        IMediator mediator,
+        MessageTrackingService messageTrackingService
+
     ) : base(options)
     {
-        _logger = Options?.LoggerFactory?.CreateLogger<BotApplication>() ?? throw new NotSupportedException("Logger is not supported");
-        _aiThreadService = aiThreadService;
+        _logger = Options.LoggerFactory?.CreateLogger<BotApplication>() ?? throw new NotSupportedException("Logger is not supported");
+        _mediator = mediator;
+        _messageTrackingService = messageTrackingService;
+
         RegisterHandlers();
     }
 
-    private static Task<bool> AllRoutes(ITurnContext context, CancellationToken cancellation) => Task.FromResult(true);
+    private static async Task<bool> IsOnlyEchoRoute(ITurnContext context, CancellationToken cancellation)
+    {
+        bool isEcho = context.Activity.Text?.StartsWith("echo", StringComparison.OrdinalIgnoreCase) ?? false;
+        return await Task.FromResult(isEcho);
+    }
+
+    private static async Task<bool> IsNormalRoute(ITurnContext context, CancellationToken cancellation)
+    {
+        return !await IsOnlyEchoRoute(context, cancellation);
+    }
 
     protected void RegisterHandlers()
     {
-        Echo(AllRoutes);
-        //RespondUsingAI(AllRoutes);
+        Echo(IsOnlyEchoRoute);
+        RespondUsingAi(IsNormalRoute);
     }
 
     private void Echo(RouteSelectorAsync selector)
     {
         OnActivity(
             selector,
-            async (turnContext, state, cancelToken) =>
+            async (turnContext, _ /* state */, cancelToken) =>
             {
-                //_logger.LogInformation("Received message: {message}", context.Activity.Text);
-                await turnContext.SendActivityAsync($"(Echo) {turnContext.Activity.Text}", cancellationToken: cancelToken);
+                await turnContext.SendActivityAsync($"{turnContext.Activity.Text}", cancellationToken: cancelToken);
                 await Task.CompletedTask;
             }
         );
     }
 
-    private void RespondUsingAI(RouteSelectorAsync selector)
+    private void RespondUsingAi(RouteSelectorAsync selector)
     {
         OnActivity(
             selector,
-            async (turnContext, state, cancelToken) =>
+            async (turnContext, _ /* state */, cancelToken) =>
             {
-                Message? message = turnContext.TurnState.GetMessage();
+                GetTrackedMessageResponse? message = await _mediator.Send(new GetTrackedMessageRequest(turnContext.Activity.Id), cancelToken);
                 if (message is null)
                 {
+                    _logger.BotInformation("The user message has not been tracked. Skip the AI response sending process");
                     return;
                 }
 
-                await _aiThreadService.AddMessage(message, cancelToken);
+                _logger.BotInformation("Forwarding the user message to the AI");
 
-                if (!await _aiThreadService.RequireAiResponse(message, cancelToken))
+                await _mediator.Send(new SetupAiThreadRequest()
                 {
-                    _logger.BotInformation("The user message does not require an AI response. Skip the AI response sending process.");
+                    ThreadId = message.ThreadId,
+                }, cancelToken);
+
+                await _mediator.Send(new SetupAiAssistantRequest()
+                {
+                    ThreadId = message.ThreadId,
+                }, cancelToken);
+
+                await _mediator.Send(new AddUserMessageRequest()
+                {
+                    MessageId = message.MessageId
+                }, cancelToken);
+
+                bool shouldRunAssistant = await _mediator.Send(new ShouldRunAssistantRequest(), cancelToken);
+                if (!shouldRunAssistant)
+                {
+                    _logger.BotInformation("The AI response is not required for the user message");
                     return;
                 }
 
-                string aiResponse = await _aiThreadService.RespondToUserMessage(message);
+                RunAssistantResponse runAssistantResponse = await _mediator.Send(new RunAssistantRequest()
+                {
+                    MessageId = message.MessageId
+                }, cancelToken);
+
+                GetLatestAssistantMessageResponse assistantResponse = await _mediator.Send(new GetLatestAssistantMessageRequest()
+                {
+                    OpenAiRunId = runAssistantResponse.OpenAiRunId,
+                    OpenAiThreadId = runAssistantResponse.OpenAiThreadId
+                });
 
                 _logger.BotInformation("Sending the AI response to the user");
-                await turnContext.SendActivityAsync(aiResponse, cancellationToken: cancelToken);
-                _logger.BotInformation("The AI response has been sent to the user");
+
+                await turnContext.SendActivityAsync(assistantResponse.Message, cancellationToken: cancelToken);
+
+                _logger.BotInformation("AI response has been sent to the user");
             }
         );
     }

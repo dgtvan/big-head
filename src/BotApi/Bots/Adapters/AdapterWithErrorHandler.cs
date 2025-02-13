@@ -12,13 +12,11 @@ public class AdapterWithErrorHandler : CloudAdapter
     (
         BotFrameworkAuthentication auth, 
         ILogger<CloudAdapter> logger,
-        TrackMessage trackMessage,
-        SetupAi setupAI
+        TrackMessage trackMessage
     )
         : base(auth, logger)
     {
         Use(trackMessage);
-        Use(setupAI);
 
         OnTurnError = async (turnContext, exception) =>
         {

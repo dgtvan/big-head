@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="Azure.AI.OpenAI" />
+    <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.Bot.Builder" />
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
@@ -25,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Businesses\_Shared\" />
     <Folder Include="Databases\Models\" />
   </ItemGroup>
 </Project>

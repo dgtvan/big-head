@@ -8,9 +8,6 @@ namespace BotApi.Businesses.Services.AzureOpenAI;
 
 public class ClientProviderService
 {
-    private readonly ConfigOptions _options;
-
-    private readonly Lazy<AzureOpenAIClient> _azureOpenAIClient;
     private readonly Lazy<OpenAIFileClient> _fileClient;
     private readonly Lazy<AssistantClient> _assistantClient;
 
@@ -19,22 +16,19 @@ public class ClientProviderService
 
     public ClientProviderService(IOptions<ConfigOptions> options)
     {
-        _options = options.Value;
-
-        _azureOpenAIClient = new Lazy<AzureOpenAIClient>(
+        var azureOpenAiClient = new Lazy<AzureOpenAIClient>(
             new AzureOpenAIClient(
-                new Uri(_options.Azure?.OpenAIEndpoint ?? throw new NullReferenceException("Endpoint is not configured")),
-                new ApiKeyCredential(_options.Azure?.OpenAIApiKey ?? throw new NullReferenceException("API Key is not configured"))
+                new Uri(options.Value.Azure?.OpenAIEndpoint ?? throw new NullReferenceException("Endpoint is not configured")),
+                new ApiKeyCredential(options.Value.Azure?.OpenAIApiKey ?? throw new NullReferenceException("API Key is not configured"))
             )
         );
 
         _fileClient = new Lazy<OpenAIFileClient>(
-            _azureOpenAIClient.Value.GetOpenAIFileClient()
+            azureOpenAiClient.Value.GetOpenAIFileClient()
         );
 
-
         _assistantClient = new Lazy<AssistantClient>(
-            _azureOpenAIClient.Value.GetAssistantClient()
+            azureOpenAiClient.Value.GetAssistantClient()
         );
     }
 }

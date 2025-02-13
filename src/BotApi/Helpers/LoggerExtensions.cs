@@ -51,10 +51,10 @@ public static class LoggerExtensions
     {
         if (thread == null)
         {
-            return $"Thread: {_notAvailable}. {message}";
+            return $"Thread: {NotAvailable}. {message}";
         }
 
-        return $"Thread: Id {thread.Id} (Name: {thread.Name ?? _notAvailable}). {message}";
+        return $"Thread: Id {thread.Id} (Name: {thread.Name ?? NotAvailable}). {message}";
     }
 
     private static string PrependLogContext(LogContext context, string logMessage)
@@ -62,14 +62,14 @@ public static class LoggerExtensions
         Thread? thread = context.Thread;
         string? logRelationId = context.LogRelationId;
         Message? message = context.Message;
-        Author? author = message?.Author;
+        //Author? author = message?.Author;
 
         string[] contextData =
             [
-                thread is null  ? string.Empty : $"Thread Id {thread.Id} (Name: {thread.Name ?? _notAvailable})",
+                thread is null  ? string.Empty : $"Thread Id {thread.Id} (Name: {thread.Name ?? NotAvailable})",
                 logRelationId is null   ? string.Empty : $"Log Relation Id {logRelationId}",
                 message is null ? string.Empty : $"Message Id {message.Id}",
-                author is null  ? string.Empty : $"Message Author Id {author.Id} (Name: {author.Name ?? _notAvailable})"
+                //author is null  ? string.Empty : $"Message Author Id {author.Id} (Name: {author.Name ?? _notAvailable})"
             ];
 
         string logContext = string.Join(", ", contextData.Where(x => !string.IsNullOrWhiteSpace(x)));
@@ -77,5 +77,5 @@ public static class LoggerExtensions
         return $"{logContext}. {logMessage}";
     }
 
-    private static readonly string _notAvailable = "N/A";
+    private static readonly string NotAvailable = "N/A";
 }

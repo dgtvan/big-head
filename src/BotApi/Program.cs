@@ -1,8 +1,10 @@
-﻿using System.Reflection;
+﻿// ReSharper disable RedundantUsingDirective
+using System.Reflection;
 using BotApi;
 using BotApi.Bots;
 using BotApi.Bots.Adapters;
 using BotApi.Bots.Middlewares;
+using BotApi.Businesses.Handlers.AzureOpenAi.AddUserMessage;
 using BotApi.Businesses.Services.AzureOpenAI;
 using BotApi.Businesses.Services.MessageTrackingService;
 using BotApi.Databases;
@@ -20,7 +22,7 @@ using Microsoft.Teams.AI.AI.Planners;
 using Microsoft.Teams.AI.AI.Prompts;
 using Microsoft.Teams.AI.State;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Emulator"))
 {
@@ -48,7 +50,6 @@ builder.Services.AddScoped<IBotFrameworkHttpAdapter>(sp => sp.GetRequiredService
 builder.Services.AddScoped<BotAdapter>(sp => sp.GetRequiredService<CloudAdapter>());
 builder.Services.AddScoped<IStorage, MemoryStorage>();
 builder.Services.AddScoped<TrackMessage>();
-builder.Services.AddScoped<SetupAi>();
 builder.Services.AddScoped<BotApplicationBuilder>();
 builder.Services.AddScoped<IBot, BotApplication>(sp =>
     sp.GetRequiredService<BotApplicationBuilder>().BuildBot()
@@ -56,12 +57,15 @@ builder.Services.AddScoped<IBot, BotApplication>(sp =>
 
 builder.Services.AddDbContext<BotDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BotDatabase"))
-, ServiceLifetime.Transient); // TODO: A multi-threaded like Web Application. DBContext should be transient?
+, ServiceLifetime.Transient);
+
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
 
 builder.Services.AddScoped<MessageTrackingService>();
-
 builder.Services.AddSingleton<ClientProviderService>();
-builder.Services.AddScoped<ThreadService>();
+
 
 
 //if (!string.IsNullOrWhiteSpace(config.OpenAI?.ApiKey))

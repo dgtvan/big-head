@@ -1,23 +1,24 @@
-﻿using BotApi.Businesses.Constants;
+﻿using BotApi.Businesses._Shared.Constants;
+using BotApi.Businesses.Constants;
 using BotApi.Databases;
 using BotApi.Databases.Enums;
 using BotApi.Databases.Models;
 using Microsoft.Bot.Schema;
+using Microsoft.EntityFrameworkCore;
 using Thread = BotApi.Databases.Models.Thread;
 
 namespace BotApi.Businesses.Services.MessageTrackingService;
 
 public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotDbContext dbContext)
 {
-    public Message TrackIncomingActivity(Activity activity)
+    public void TrackIncomingActivity(Activity activity)
     {
-        return Track(activity);
+        Track(activity);
     }
 
-    public Message TrackOutgoingActivity(Activity activity)
+    public void TrackOutgoingActivity(Activity activity)
     {
-        Message message = Track(activity);
-        return message;
+        Track(activity);
     }
 
     public bool ShouldTrack(Activity activity)
@@ -27,7 +28,7 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
             // For simplicity, we only track messages for now.
             logger.BotInformation(
                 "Activity type is {activityType}, which is not a message." +
-                " We ignore it completely, no any actions applied to it e.g. Tracking, AI...", 
+                " We ignore it completely, no any actions applied to it e.g. Tracking, AI...",
                 activity.Type);
 
             return false;
@@ -36,27 +37,44 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
         return true;
     }
 
-    private Message Track(Activity activity)
+    public int? GetMessageId(Activity activity)
     {
-        //
-        // Author
-        //
+        return dbContext.Messages.AsNoTracking().FirstOrDefault(m => m.ReferenceId == activity.Id)?.Id;
+    }
+
+    private void Track(Activity activity)
+    {
+        Author author = TrackAuthor(activity);
+        Thread thread = TrackThread(activity);
+        TrackMessage(activity, author, thread);
+        TrackChannel(activity);
+    }
+
+    private Author TrackAuthor(Activity activity)
+    {
         string? authorReferenceId = activity.From.Id;
+
         Author? author = dbContext.Authors.FirstOrDefault(a => a.ReferenceId == authorReferenceId);
         if (author == null)
         {
             author = new Author
             {
                 ReferenceId = authorReferenceId,
-                Name = activity.From.Name
+                Name        = activity.From.Name
             };
+
             dbContext.Authors.Add(author);
+
+            dbContext.SaveChanges();
         }
 
-        //
-        // Thread
-        //
+        return author;
+    }
+
+    private Thread TrackThread(Activity activity)
+    {
         Thread? thread = dbContext.Threads.FirstOrDefault(t => t.ReferenceId == activity.Conversation.Id);
+
         if (thread == null)
         {
             thread = new Thread()
@@ -70,55 +88,51 @@ public class MessageTrackingService(ILogger<MessageTrackingService> logger, BotD
         {
             thread.Type = ThreadType.Emulator;
         }
+        else if (activity.Conversation.ConversationType.Equals(TeamsConversationType.GroupChat,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            thread.Type = ThreadType.Meeting;
+        }
+        else if (activity.Conversation.ConversationType.Equals(TeamsConversationType.Personal,
+                     StringComparison.OrdinalIgnoreCase))
+        {
+            thread.Type = ThreadType.Personal;
+        }
         else
         {
-            if (activity.Conversation.ConversationType.Equals(TeamsConversationType.GroupChat, StringComparison.OrdinalIgnoreCase))
-            {
-                thread.Type = ThreadType.Meeting;
-            }
-            else if (activity.Conversation.ConversationType.Equals(TeamsConversationType.Personal, StringComparison.OrdinalIgnoreCase))
-            {
-                thread.Type = ThreadType.Personal;
-            }
-            else
-            {
-                throw new NotImplementedException($"Not implemented ConversationType {activity.Conversation.ConversationType}");
-            }
+            throw new NotImplementedException(
+                $"Not implemented ConversationType {activity.Conversation.ConversationType}");
         }
 
-        if (thread is null)
-        {
-            throw new NullReferenceException("Thread is null");
-        }
+        dbContext.SaveChanges();
 
+        return thread;
+    }
 
-        //
-        // Message
-        //
+    private void TrackMessage(Activity activity, Author author, Thread thread)
+    {
         Message message = new()
         {
-            ReferenceId = IsEmulator(activity) ? BotIdentity.MessageReferenceId : activity.Id,
-            Author      = author,
-            Thread      = thread,
+            ReferenceId = activity.Id ?? BotIdentity.MessageReferenceId,
+            AuthorId    = author.Id,
+            ThreadId    = thread.Id,
             Text        = activity.Text,
             Timestamp   = activity.Timestamp?.UtcDateTime ?? DateTime.UtcNow
         };
+
         dbContext.Messages.Add(message);
 
+        dbContext.SaveChanges();
+    }
 
-        //
-        // Channel
-        //
+    private void TrackChannel(Activity _)
+    {
         // TODO: Determine which channel the message comes from.
         // The activity.ChannelId provides a string that identifies the channel, such as:
         //  "msteams" for Microsoft Teams
         //  "slack" for Slack
         //  "emulator" for the Bot Framework Emulator
         //  "directline" for Direct Line
-
-        dbContext.SaveChanges();
-
-        return message;
     }
 
     private static bool IsEmulator(Activity activity)
