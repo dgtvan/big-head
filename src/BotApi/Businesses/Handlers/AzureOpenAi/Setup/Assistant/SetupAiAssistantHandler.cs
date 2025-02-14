@@ -48,6 +48,8 @@ public class SetupAiAssistantHandler(
                     OpenAiAssistantId = openAiAssistantId
                 });
 
+                dbContext.SaveChanges();
+
                 logger.BotInformation("Use AI Sssistant Id {assistantId}", openAiAssistantId);
 
                 return;

@@ -50,6 +50,8 @@ public class SetupAiThreadHandler(
                 };
                 dbContext.OpenAiThreads.Add(openAiThread);
 
+                dbContext.SaveChanges();
+
                 logger.BotInformation(thread, "Use the AI Thread {aiThreadId}", openAiThreadId);
 
                 return;

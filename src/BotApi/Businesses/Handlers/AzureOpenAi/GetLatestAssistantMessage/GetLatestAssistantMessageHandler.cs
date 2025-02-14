@@ -80,13 +80,13 @@ public class GetLatestAssistantMessageHandler(
                     // For now, we only handle the text content.
                     stringBuilder.AppendLine(contentText);
 
-                    //stringBuilder.AppendLine("(The response was composed based on the following reference files: " + string.Join(", ", referenceFileIds) + ")");
-                    if (referenceFileIds.Any())
-                    {
-                        stringBuilder.AppendLine("(The response was composed based on the reference files)");
-                    }
-
                     stringBuilder.AppendLine();
+                }
+
+                //stringBuilder.AppendLine("(The response was composed   based on the following reference files: " + string.Join(", ", referenceFileIds) + ")");
+                if (referenceFileIds.Any())
+                {
+                    stringBuilder.AppendLine("(The response was composed based on the reference files)");
                 }
             }
         }
