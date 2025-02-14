@@ -50,7 +50,9 @@ public class GetLatestAssistantMessageHandler(
                     break;
                 }
 
+                List<string> referenceFileIds = [];
                 int messageContentCounter = 1;
+
                 foreach (MessageContent content in assistantMessage.Content)
                 {
                     logger.BotInformation("Reading the message content {counter}", messageContentCounter++);
@@ -64,6 +66,11 @@ public class GetLatestAssistantMessageHandler(
                         logger.BotInformation("Annotation TextToReplace {start}", annotation.TextToReplace);
                         logger.BotInformation("Annotation InputField {start}", annotation.InputFileId); // File Id in the vectoer store
 
+                        if (!string.IsNullOrWhiteSpace(annotation.InputFileId))
+                        {
+                            referenceFileIds.Add(annotation.InputFileId);
+                        }
+
                         // TODO: Handle the text annotation
                         // For now, I will just remove the citation data.
                         contentText = contentText.Replace(annotation.TextToReplace, string.Empty);
@@ -72,6 +79,12 @@ public class GetLatestAssistantMessageHandler(
                     // TODO: Handle image, image annotation,...
                     // For now, we only handle the text content.
                     stringBuilder.AppendLine(contentText);
+
+                    //stringBuilder.AppendLine("(The response was composed based on the following reference files: " + string.Join(", ", referenceFileIds) + ")");
+                    if (referenceFileIds.Any())
+                    {
+                        stringBuilder.AppendLine("(The response was composed based on the reference files)");
+                    }
 
                     stringBuilder.AppendLine();
                 }

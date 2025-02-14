@@ -86,5 +86,7 @@ public class SetupAiAssistantHandler(
         dbContext.SaveChanges();
 
         logger.BotInformation("Created AI Assistant");
+
+        logger.BotInformation("AI Assistant Id {assistantId}", assistant.Id);
     }
 }
