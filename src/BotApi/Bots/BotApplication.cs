@@ -111,10 +111,14 @@ public class BotApplication : Application<TurnState>
                     OpenAiThreadId = runAssistantResponse.OpenAiThreadId
                 });
 
+                if (string.IsNullOrWhiteSpace(assistantResponse.Message))
+                {
+                    _logger.BotInformation("The AI response is empty. Do not send it to the user");
+                    return;
+                }
+
                 _logger.BotInformation("Sending the AI response to the user");
-
                 await turnContext.SendActivityAsync(assistantResponse.Message, cancellationToken: cancelToken);
-
                 _logger.BotInformation("AI response has been sent to the user");
             }
         );

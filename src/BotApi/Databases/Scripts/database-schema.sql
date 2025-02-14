@@ -54,7 +54,7 @@ CREATE TABLE PromptTemplate(
 -- Create table: OpenAiAssistant
 CREATE TABLE OpenAiAssistant (
     ThreadId INT NOT NULL,
-    OpenAiThreadId NVARCHAR(200) NOT NULL,
+    OpenAiAssistantId NVARCHAR(200) NOT NULL,
 );
 
 -- Create table: OpenAiThread

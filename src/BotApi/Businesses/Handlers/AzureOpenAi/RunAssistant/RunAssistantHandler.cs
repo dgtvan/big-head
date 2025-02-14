@@ -30,8 +30,8 @@ public class RunAssistantHandler(
             ?? throw new NullReferenceException($"Could not find the OpenAI Thread with the Thread Id {message.ThreadId}");
 
         OpenAiAssistant openAiAssistant =
-            dbContext.OpenAiAssistants.AsNoTracking().FirstOrDefault(x => x.OpenAiAssistantId == openAiThread.OpenAiThreadId)
-            ?? throw new NullReferenceException($"Could not find the OpenAI Assistant with the OpenAI Assistant Id {openAiThread.OpenAiThreadId}");
+            dbContext.OpenAiAssistants.AsNoTracking().FirstOrDefault(x => x.ThreadId == openAiThread.ThreadId)
+            ?? throw new NullReferenceException($"Could not find the OpenAI Assistant with the Thread Id {openAiThread.ThreadId}");
 
        string runId = await RunAssistant(openAiThread.OpenAiThreadId, openAiAssistant.OpenAiAssistantId);
 
@@ -85,6 +85,10 @@ public class RunAssistantHandler(
             logger.BotInformation("Last Error (Code: {code}: {error}", runResult.LastError.Code,
                 runResult.LastError.Message);
         }
+
+        logger.BotInformation("AI Thread ID: {threadId}", runResult.ThreadId);
+        logger.BotInformation("AI Assistant ID: {assistantId}", runResult.AssistantId);
+        logger.BotInformation("AI Run ID: {runId}", runResult.Id);
 
         return runResult.Id;
     }

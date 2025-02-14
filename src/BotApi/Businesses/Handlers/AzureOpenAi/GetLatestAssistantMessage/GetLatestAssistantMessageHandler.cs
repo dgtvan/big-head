@@ -44,10 +44,10 @@ public class GetLatestAssistantMessageHandler(
                 ThreadMessage assistantMessage = enumerator.Current;
                 logger.BotInformation("Reading the thread message {counter}", threadMessageCounter++);
 
-                if (!assistantMessage.RunId.Equals(request.OpenAiRunId, StringComparison.OrdinalIgnoreCase))
+                if (assistantMessage.RunId is null /* It is User messsage */
+                    || assistantMessage.RunId?.Equals(request.OpenAiRunId, StringComparison.OrdinalIgnoreCase) is not true /* Reach a message that does not belong to the current run */ )
                 {
-                    logger.BotWarning("Something is not right. There is a message from a different run. The current Run Id is {runId}", assistantMessage.RunId);
-                    continue;
+                    break;
                 }
 
                 int messageContentCounter = 1;
@@ -55,7 +55,7 @@ public class GetLatestAssistantMessageHandler(
                 {
                     logger.BotInformation("Reading the message content {counter}", messageContentCounter++);
 
-                    string contentText = string.Empty;
+                    string contentText = content.Text;
 
                     foreach (TextAnnotation annotation in content.TextAnnotations)
                     {
@@ -66,7 +66,7 @@ public class GetLatestAssistantMessageHandler(
 
                         // TODO: Handle the text annotation
                         // For now, I will just remove the citation data.
-                        contentText = content.Text.Replace(annotation.TextToReplace, string.Empty);
+                        contentText = contentText.Replace(annotation.TextToReplace, string.Empty);
                     }
 
                     // TODO: Handle image, image annotation,...
@@ -88,6 +88,12 @@ public class GetLatestAssistantMessageHandler(
         {
             Message = stringBuilder.ToString()
         };
+
+        if (response.Message.Length == 0)
+        {
+            logger.BotWarning("The assistant message is empty.");
+        }
+
         return response;
     }
 }

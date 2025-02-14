@@ -97,6 +97,8 @@ public class AddUserMessageHandler(
 
         logger.BotInformation("AI Message Id: {id}", openAiMessage.Id);
 
+        logger.BotInformation("AI Thread Id: {id}", openAiThreadId);
+
         return openAiMessage.Id;
     }
 }
