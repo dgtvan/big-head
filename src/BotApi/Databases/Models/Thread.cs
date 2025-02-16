@@ -1,16 +1,12 @@
-﻿namespace BotApi.Databases.Models;
+using BotApi.Databases.Enums;
 
-public class Thread
+namespace BotApi.Databases.Models
 {
-    public int Id { get; set; }
-    public string? Name { get; set; }
-    public string? ReferenceId { get; set; }
-    public ThreadType Type { get; set; }
-}
-
-public enum ThreadType
-{
-    Meeting,
-    Group,
-    Personal
+    public class Thread
+    {
+        public int Id { get; set; }
+        public string ReferenceId { get; set; } = string.Empty;
+        public string? Name { get; set; }
+        public ThreadType Type { get; set; }
+    }
 }

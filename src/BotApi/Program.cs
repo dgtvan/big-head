@@ -1,20 +1,33 @@
-﻿using BotApi;
+﻿// ReSharper disable RedundantUsingDirective
+using System.Reflection;
+using BotApi;
 using BotApi.Bots;
 using BotApi.Bots.Adapters;
 using BotApi.Bots.Middlewares;
-using BotApi.Businesses.Services;
+using BotApi.Businesses.Handlers.AzureOpenAi.AddUserMessage;
+using BotApi.Businesses.Services.AzureOpenAI;
+using BotApi.Businesses.Services.MessageTrackingService;
+using BotApi.Databases;
 using Microsoft.Bot.Builder;
+using Microsoft.Bot.Builder.Dialogs.Memory.Scopes;
 using Microsoft.Bot.Builder.Integration.AspNet.Core;
 using Microsoft.Bot.Connector.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting.Internal;
+using Microsoft.Extensions.Options;
 using Microsoft.Teams.AI;
 using Microsoft.Teams.AI.AI.Models;
 using Microsoft.Teams.AI.AI.Planners;
 using Microsoft.Teams.AI.AI.Prompts;
 using Microsoft.Teams.AI.State;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+if (builder.Environment.IsDevelopment() || builder.Environment.IsEnvironment("Emulator"))
+{
+    builder.Configuration.AddUserSecrets<Program>();
+}
 
 builder.Services.AddControllers();
 builder.Services.AddHttpClient("WebClient", client => client.Timeout = TimeSpan.FromSeconds(600));
@@ -22,6 +35,8 @@ builder.Services.AddHttpContextAccessor();
 
 // Create the Bot Framework Authentication to be used with the Bot Adapter.
 var config = builder.Configuration.Get<ConfigOptions>();
+builder.Services.AddOptions<ConfigOptions>().Bind(builder.Configuration);
+
 builder.Configuration["MicrosoftAppType"] = "MultiTenant";
 builder.Configuration["MicrosoftAppId"] = config?.BOT_ID;
 builder.Configuration["MicrosoftAppPassword"] = config?.BOT_PASSWORD;
@@ -34,7 +49,7 @@ builder.Services.AddScoped<CloudAdapter, AdapterWithErrorHandler>();
 builder.Services.AddScoped<IBotFrameworkHttpAdapter>(sp => sp.GetRequiredService<CloudAdapter>());
 builder.Services.AddScoped<BotAdapter>(sp => sp.GetRequiredService<CloudAdapter>());
 builder.Services.AddScoped<IStorage, MemoryStorage>();
-builder.Services.AddScoped<InAndOutActivityTracking>();
+builder.Services.AddScoped<TrackMessage>();
 builder.Services.AddScoped<BotApplicationBuilder>();
 builder.Services.AddScoped<IBot, BotApplication>(sp =>
     sp.GetRequiredService<BotApplicationBuilder>().BuildBot()
@@ -42,9 +57,16 @@ builder.Services.AddScoped<IBot, BotApplication>(sp =>
 
 builder.Services.AddDbContext<BotDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BotDatabase"))
-, ServiceLifetime.Transient); // TODO: A multi-threaded like Web Application. DBContext should be transient?
+, ServiceLifetime.Transient);
 
-builder.Services.AddScoped<InAndOutActivityTrackingService>();
+builder.Services.AddMediatR(cfg => {
+    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly);
+});
+
+builder.Services.AddScoped<MessageTrackingService>();
+builder.Services.AddSingleton<ClientProviderService>();
+
+
 
 //if (!string.IsNullOrWhiteSpace(config.OpenAI?.ApiKey))
 //{
@@ -116,7 +138,7 @@ builder.Services.AddScoped<InAndOutActivityTrackingService>();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Emulator"))
 {
     app.UseDeveloperExceptionPage();
 }

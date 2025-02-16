@@ -1,8 +1,9 @@
-﻿namespace BotApi.Databases.Models;
-
-public class Author
+namespace BotApi.Databases.Models
 {
-    public int Id { get; set; }
-    public required string ReferenceId { get; set; }
-    public required string Name { get; set; }
+    public class Author
+    {
+        public int Id { get; set; }
+        public string ReferenceId { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
+    }
 }

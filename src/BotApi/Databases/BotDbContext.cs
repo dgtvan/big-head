@@ -1,51 +1,82 @@
-﻿using BotApi.Databases.Models;
+using BotApi.Databases.Enums;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using BotApi.Databases.Models;
 using Thread = BotApi.Databases.Models.Thread;
 
-public class BotDbContext : DbContext
+namespace BotApi.Databases
 {
-    public BotDbContext(DbContextOptions<BotDbContext> options)
-        : base(options)
+    public class BotDbContext : DbContext
     {
-    }
+        // Constructor
+        public BotDbContext(DbContextOptions<BotDbContext> options) : base(options) { }
 
-    public DbSet<Author> Authors { get; set; }
-    public DbSet<Message> Messages { get; set; }
-    public DbSet<Thread> Threads { get; set; }
+        // DbSets
+        public DbSet<Author> Authors { get; set; } = null!;
+        public DbSet<Message> Messages { get; set; } = null!;
+        public DbSet<Thread> Threads { get; set; } = null!;
+        public DbSet<PrompTemplate> PromptTemplates { get; set; } = null!;
+        public DbSet<OpenAiThread> OpenAiThreads { get; set; } = null!;
+        public DbSet<OpenAiAssistant> OpenAiAssistants { get; set; } = null!;
+        public DbSet<OpenAiMessage> OpenAiMessages { get; set; } = null!;
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
 
-        // Configure Author entity
-        modelBuilder.Entity<Author>(entity =>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            entity.ToTable(nameof(Author));
-            entity.HasKey(a => a.Id);
-        });
+            base.OnModelCreating(modelBuilder);
 
-        // Configure Message entity
-        modelBuilder.Entity<Message>(entity =>
-        {
-            entity.ToTable(nameof(Message));
-            entity.HasKey(m => m.Id);
+            // Author Entity Configuration
+            modelBuilder.Entity<Author>(entity =>
+            {
+                entity.ToTable(nameof(Author));
+                entity.HasKey(a => a.Id);
+            });
 
-            entity.HasOne(m => m.Author)
-                  .WithMany()
-                  .HasForeignKey(m => m.AuthorId);
+            // Thread Entity Configuration
+            modelBuilder.Entity<Thread>(entity =>
+            {
+                entity.ToTable(nameof(Thread));
+                entity.HasKey(t => t.Id);
+                entity.Property(t => t.Type).IsRequired()
+                    .HasConversion(
+                        v => v.ToString(),  // Enum to string
+                        v => Enum.Parse<ThreadType>(v) // String to enum (generic Enum.Parse)
+                    );
+            });
 
-            entity.HasOne(m => m.Thread)
-                  .WithMany()
-                  .HasForeignKey(m => m.ThreadId);
-        });
+            // Message Entity Configuration
+            modelBuilder.Entity<Message>(entity =>
+            {
+                entity.ToTable(nameof(Message));
+                entity.HasKey(m => m.Id);
+            });
+            
+            // AIUserMessagePrompt Entity Configuration
+            modelBuilder.Entity<PrompTemplate>(entity =>
+            {
+                entity.ToTable(nameof(PrompTemplate));
+                entity.HasKey(ump => ump.Id);
+            });
 
-        // Configure Thread entity
-        modelBuilder.Entity<Thread>(entity =>
-        {
-            entity.ToTable(nameof(Thread));
-            entity.HasKey(t => t.Id);
-            entity.Property(t => t.Type).HasConversion(new EnumToStringConverter<ThreadType>());
-        });
+            // AIThread Entity Configuration
+            modelBuilder.Entity<OpenAiThread>(entity =>
+            {
+                entity.ToTable(nameof(OpenAiThread));
+                entity.HasKey(at => at.ThreadId);
+            });
+
+            // AIAssistant Entity Configuration
+            modelBuilder.Entity<OpenAiAssistant>(entity =>
+            {
+                entity.ToTable(nameof(OpenAiAssistant));
+                entity.HasKey(x => new { x.ThreadId, OpenAiThreadId = x.OpenAiAssistantId });
+            });
+
+            // AIMessage Entity Configuration
+            modelBuilder.Entity<OpenAiMessage>(entity =>
+            {
+                entity.ToTable(nameof(OpenAiMessage));
+                entity.HasKey(am => am.MessageId);
+            });
+        }
     }
 }

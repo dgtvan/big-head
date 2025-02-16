@@ -4,14 +4,13 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>5b4f1d79-7c67-44b8-8d3b-58ea53b8a13d</UserSecretsId>
-      <Nullable>enable</Nullable>
+    <Nullable>enable</Nullable>
+    <NoWarn>OPENAI001</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Databases\Scripts\database-schema.sql" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Azure.AI.OpenAI" />
+    <PackageReference Include="MediatR" />
     <PackageReference Include="Microsoft.Bot.Builder" />
     <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
@@ -24,5 +23,10 @@
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
     <Content Include="Databases\Scripts\database-schema.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Businesses\_Shared\" />
+    <Folder Include="Databases\Models\" />
   </ItemGroup>
 </Project>
